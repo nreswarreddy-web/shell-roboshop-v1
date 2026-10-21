@@ -37,10 +37,13 @@ else
 fi
 
 # update R53 record
-       echo "record : ${r53_record}"
+echo "IP=$IP"
+echo "Record=$r53_record"
+echo "Hosted Zone=$hosted_zone_id"
+echo "record : ${r53_record}"
 
 	aws route53 change-resource-record-sets \
-    --hosted-zone-id ZONE_ID $hosted-zone-id \
+    --hosted-zone-id $hosted-zone-id \
     --change-batch '{
         "Comment": "Updating DNS record",
         "Changes": [
