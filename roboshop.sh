@@ -43,7 +43,7 @@ echo "Hosted Zone=$hosted_zone_id"
 echo "record : ${r53_record}"
 
 	aws route53 change-resource-record-sets \
-    --hosted-zone-id $hosted-zone-id \
+    --hosted-zone-id $hosted_zone_id \
     --change-batch '{
         "Comment": "Updating DNS record",
         "Changes": [
