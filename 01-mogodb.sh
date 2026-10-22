@@ -16,11 +16,11 @@ if  [ $user_id -ne 0 ]; then
 validate(){
    if [ $1 -ne 0 ]; then 
 
-   echo " ${2}......failed" | tee -a $logs_file
+   echo " ${2}......FAILED" | tee -a $logs_file
    exit 1
 
    else 
-   echo " ${1}.... Sucess " | tee -a $logs_file
+   echo " ${1}.... SUCCESS " | tee -a $logs_file
 
    fi
 }
@@ -40,6 +40,6 @@ sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
 validate $? "updateing remote functions"
 
 systemctl restart mongod
-validate $?"System restart to mongod"
+validate $? "System restart to mongod"
 
 
