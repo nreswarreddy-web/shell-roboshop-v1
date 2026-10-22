@@ -20,7 +20,7 @@ validate(){
    exit 1
 
    else 
-   echo " ${1}.... SUCCESS " | tee -a $logs_file
+   echo " ${2}.... SUCCESS " | tee -a $logs_file
 
    fi
 }
