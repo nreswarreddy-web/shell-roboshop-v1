@@ -92,7 +92,7 @@ validate $? "Adding Mongo repo"
 dnf install mongodb-mongosh -y >> $logs_file
 validate $? "Installing mongosh"
 
-mongosh --host "mongo.$domain_name" </app/db/master-data.js >> $logs_file
+mongosh --host "mongodb.$domain_name" </app/db/master-data.js >> $logs_file
 validate $? "Loading the products"
 
 
