@@ -54,6 +54,9 @@ echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping${N}"
 
 fi
 
+rm -rf /app
+validate "remove old files from directory"
+
 mkdir -p /app
 validate $? "app directory"
 
