@@ -43,7 +43,7 @@ dnf install nodejs -y  &>> $logs_file
 validate $? "Installing the nodejs 24"
 
 
-if [ $? ne- 0 ]; then
+if [ $? -ne 0 ]; then
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 validate $? "Applicatoin is going to run non user "
@@ -55,7 +55,7 @@ echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping${N}"
 fi
 
 rm -rf /app
-validate "remove old files from directory"
+validate "removeing old application directory"
 
 mkdir -p /app
 validate $? "app directory"
@@ -72,7 +72,7 @@ validate $? "install dependencies"
 
 
 
- sed -i "s/DOMIN_NAME/$domain_name/g" " $scripts_dir/catalogue.service"
+ sed -i "s/DOMIN_NAME/$domain_name/g" "$scripts_dir/catalogue.service"
 
   cp "$scripts_dir/catalogue.service"  /etc/systemd/system/catalogue.service
 
