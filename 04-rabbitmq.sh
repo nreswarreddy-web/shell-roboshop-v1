@@ -46,8 +46,17 @@ systemctl start rabbitmq-server &>> $logs_file
 validate $? "Start & enable the RabbitMQ service:"
 
 
+rabbitmqctl list_users | grep -w "roboshop"  &>> $logs_file
+
+if [ $? -ne 0 ]; then
 rabbitmqctl add_user roboshop roboshop123
-validate $? "adding user name"
+validate $? "Creating user name for roboshop"
+
+else 
+
+echo -e "$(timestamp)[INFO] Rabitmq already exit .....${Y}Skipping{N}"
+
+fi
 
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 validate $? "setting the permission for rabbitmq"
