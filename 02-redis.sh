@@ -6,7 +6,7 @@ logs_file="${logs_folder}/${0}.log"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[34m"
+N="\e[0m"
 
 if  [ $user_id -ne 0 ]; then
    echo "please run this script with sudo access"
@@ -46,6 +46,6 @@ validate $? "edit the vim file "
 
 systemctl enable redis  &>> $logs_file
 systemctl start redis &>> $logs_file
-validate $?"enable start redis"
+validate $? "enable start redis"
 
 echo "$(timestamp)[INFO] === Scripted Completed and execution" | tee -a $logs_file
