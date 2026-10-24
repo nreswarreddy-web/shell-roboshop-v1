@@ -24,7 +24,7 @@ if  [ $user_id -ne 0 ]; then
  echo "scipt started executing at $(date +"%F %T")"  &>> $logs_file
 
 validate(){
-   if [ $1 -ne 0 ]; then 
+   if [ $? -ne 0 ]; then 
 
    echo -e "$(timestamp)[ERROR]......${R}FAILED${N}" | tee -a $logs_file
    exit 1
@@ -55,7 +55,7 @@ echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping${N}"
 fi
 
 rm -rf /app
-validate "removeing old application directory"
+validate $? "removeing old application directory"
 
 mkdir -p /app
 validate $? "app directory"
@@ -83,13 +83,12 @@ systemctl daemon-reload  &>> $logs_file
 systemctl enable catalogue  &>> $logs_file
 systemctl start catalogue  &>> $logs_file
 
-validate "$(timestamp)[INFO] === Load and start the service"
+validate $? "Load and start catalogue service"
 
-cp "$scripts_dir/mongo.repo" /etc/systemd/system/mongo.repo
-validate $? "adding mongo repo"
 
-dnf install mongodb-mongosh -y  &>> $logs_file
-validate $? "install mongodb"
+
+cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo
+validate $? "Adding MongoDB repo"
 
 
 
