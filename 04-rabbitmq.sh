@@ -47,8 +47,11 @@ validate $? "Start & enable the RabbitMQ service:"
 
 
 rabbitmqctl add_user roboshop roboshop123
+validate $? "adding user name"
+
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
-validate $? "create RabbitMQ user"
+validate $? "setting the permission for rabbitmq"
+
 
 
 echo "$(timestamp)[INFO] === Scripted Completed in $SECONDS seconds"
