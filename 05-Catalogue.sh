@@ -69,10 +69,24 @@ validate $? "install dependencies"
 
 
 
- sed -i "s/DOMIN_NAME/$domain_name" " $scripts_dir/catalogue.service
+ sed -i "s/DOMIN_NAME/$domain_name" " $scripts_dir/catalogue.service"
 
   cp "$scripts_dir/catalogue.repo"  /etc/systemd/system/catalogue.service
-  #validate $? "adding vim files into catalogues"
+
+  validate $? "adding vim files into catalogues"
+
+
+systemctl daemon-reload  &>> $logs_file
+systemctl enable catalogue  &>> $logs_file
+systemctl start catalogue  &>> $logs_file
+
+validate "$(timestamp)[INFO] === Load and start the service"
+
+cp "$scripts_dir/mongo.repo" /etc/systemd/system/mongo.repo
+validate $? "adding mongo repo"
+
+dnf install mongodb-mongosh -y  &>> $logs_file
+validate $? "install mongodb"
 
 
 
