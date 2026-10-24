@@ -87,8 +87,11 @@ validate $? "Load and start catalogue service"
 
 
 
-cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo
+cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo 
 validate $? "Adding MongoDB repo"
+
+mongosh --host "mongo.$domain_name" </app/db/master-data.js &>> $logs_file
+validate $? "Load the data only once"
 
 
 
