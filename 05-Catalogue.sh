@@ -24,7 +24,7 @@ if  [ $user_id -ne 0 ]; then
  echo "scipt started executing at $(date +"%F %T")"  &>> $logs_file
 
 validate(){
-   if [ $? -ne 0 ]; then 
+   if [ $1 -ne 0 ]; then 
 
    echo -e "$(timestamp)[ERROR]......${R}FAILED${N}" | tee -a $logs_file
    exit 1
@@ -86,12 +86,14 @@ systemctl start catalogue  &>> $logs_file
 validate $? "Load and start catalogue service"
 
 
+cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo
+validate $? "Adding Mongo repo"
 
-cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo 
-validate $? "Adding MongoDB repo"
+dnf install mongodb-mongosh -y >> $logs_file
+validate $? "Installing mongosh"
 
-mongosh --host "mongo.$domain_name" </app/db/master-data.js &>> $logs_file
-validate $? "Load the data only once"
+mongosh --host "mongo.$domain_name" </app/db/master-data.js >> $logs_file
+validate $? "Loading the products"
 
 
 
