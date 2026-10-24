@@ -72,9 +72,9 @@ validate $? "install dependencies"
 
 
 
- sed -i "s/DOMIN_NAME/$domain_name" " $scripts_dir/catalogue.service"
+ sed -i "s/DOMIN_NAME/$domain_name/g" " $scripts_dir/catalogue.service"
 
-  cp "$scripts_dir/catalogue.repo"  /etc/systemd/system/catalogue.service
+  cp "$scripts_dir/catalogue.service"  /etc/systemd/system/catalogue.service
 
   validate $? "adding vim files into catalogues"
 
