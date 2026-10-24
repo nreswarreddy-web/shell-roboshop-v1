@@ -3,6 +3,8 @@
 user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/${0}.log"
+domain_name="daw92ss.store"
+scripts_dir=$(dirname  "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -41,21 +43,35 @@ dnf install nodejs -y  &>> $logs_file
 validate $? "Installing the nodejs 24"
 
 
-if [$? ne- 0]; then
+if [ $? ne- 0 ]; then
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 validate $? "Applicatoin is going to run non user "
 
 else 
 
-echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping{N}"
+echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping${N}"
 
 fi
 
+mkdir -p /app
+validate $? "app directory"
+
+curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip &>> $logs_file
+validate $? "Download the catlogue"
+
+cd /app
+unzip /tmp/catalogue.zip &>> $logs_file
+validate $? "unzip the catlogue file"
+
+npm install &>> $logs_file
+validate $? "install dependencies"
 
 
 
-  #cp catalogue.repo /etc/systemd/system/catalogue.service
+ sed -i "s/DOMIN_NAME/$domain_name" " $scripts_dir/catalogue.service
+
+  cp "$scripts_dir/catalogue.repo"  /etc/systemd/system/catalogue.service
   #validate $? "adding vim files into catalogues"
 
 
