@@ -39,11 +39,11 @@ dnf module enable mysql:8.4 -y  &>> $logs_file
 dnf install mysql-server -y  &>> $logs_file
 validate $? "Sql sucessfully installed"
 
-systemctl enable mysqld
-systemctl start mysqld
+systemctl enable mysqld  &>> $logs_file
+systemctl start mysqld  &>> $logs_file
 validate $? "Start & enable the MySQL service:"
 
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass RoboShop@1 &>> $logs_file
 validate $? "Set the root password"
 
 echo "$(timestamp)[INFO] === Scripted Completed in $SECONDS seconds"
