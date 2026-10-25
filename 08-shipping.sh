@@ -83,7 +83,7 @@ cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 sed -i "s/DOMAIN_NAME/$domain_name/g" /etc/systemd/system/shipping.service
 validate $? "adding vim files into shipping"
 
-dnf install mysql -y
+dnf install mysql -y &>> $logs_file
 validate $? "install my sql"
 
 mysql -h "mysql.DOMAIN_NAME" -uroot -pRoboShop@1 < /app/db/master-data.sql
