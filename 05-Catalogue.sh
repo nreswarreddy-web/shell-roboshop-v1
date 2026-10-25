@@ -114,3 +114,4 @@ validate $? "restarting catalogure"
 
 echo "$(timestamp)[INFO] === Scripted Completed in $SECONDS seconds"
 echo "$(timestamp)[INFO] === Scripted Completed and execution" | tee -a $logs_file
+
