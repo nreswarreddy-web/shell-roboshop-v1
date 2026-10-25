@@ -86,7 +86,7 @@ validate $? "adding vim files into shipping"
 dnf install mysql -y &>> $logs_file
 validate $? "install my sql"
 
-mysql -h "mysql.DOMAIN_NAME" -uroot -pRoboShop@1 < /app/db/master-data.sql
+mysql -h "mysql.${domain_name}" -uroot -pRoboShop@1 < /app/db/master-data.sql
 validate $? "Loading shipping data"
 
 
