@@ -86,20 +86,27 @@ validate $? "adding vim files into shipping"
 dnf install mysql -y &>> $logs_file
 validate $? "install my sql"
 
+
+count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;"  2>> $logs_file)
+if[ -z "$count" ] || [ "$count"  -eq 0 ]; then 
+
 mysql -h "mysql.${domain_name}" -uroot -pRoboShop@1 < /app/db/master-data.sql
 validate $? "Loading shipping data"
+
+else 
+
+echo -e  echo -e "$(timestamp)[INFO] master data already loaded.....${Y}Skipping${N}"
+
+fi 
+
+mysql -h "mysql.${domain_name}" -uroot -pRoboShop@1 < /app/db/app-user.sql
+validate $? "Creating app user "
 
 
 systemctl daemon-reload  &>> $logs_file
 systemctl enable shipping  &>> $logs_file
-systemctl start shipping  &>> $logs_file
-
-validate $? "Load and start shipping service"
-
-
-systemctl restart shipping
+systemctl restart shipping  &>> $logs_file
 validate $? "restarting shipping"
-
 
 echo "$(timestamp)[INFO] === Scripted Completed in $SECONDS seconds"
 echo "$(timestamp)[INFO] === Scripted Completed and execution" | tee -a $logs_file
