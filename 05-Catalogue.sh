@@ -43,15 +43,11 @@ dnf install nodejs -y  &>> $logs_file
 validate $? "Installing the nodejs 24"
 
 
-if [ $? -ne 0 ]; then
-
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-validate $? "Creating roboshop user"
-
-else 
-
-echo -e "$(timestamp)[INFO] catlogs already exit .....${Y}Skipping${N}"
-
+if id roboshop &>/dev/null; then
+    echo -e "$(timestamp)[INFO] roboshop user already exists.....${Y}Skipping${N}"
+else
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "Creating roboshop user"
 fi
 
 rm -rf /app
@@ -72,9 +68,9 @@ validate $? "install dependencies"
 
 
 
- sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/catalogue.service"
+cp "$scripts_dir/catalogue.service" /etc/systemd/system/catalogue.service
 
-  cp "$scripts_dir/catalogue.service"  /etc/systemd/system/catalogue.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" /etc/systemd/system/catalogue.service
 
   validate $? "adding vim files into catalogues"
 
