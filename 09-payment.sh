@@ -66,13 +66,17 @@ cd /app
 python3.14 -m venv /app/.venv   &>> $logs_file
 validate $? "Creating virtual environment"
 
+echo "$(timestamp)[INFO] === checking at before install dependencies $SECONDS seconds"
+
 /app/.venv/bin/pip install -r requirements.txt   &>> $logs_file
 validate $? "Install dependencies" 
 
 
 cp "$scripts_dir/payment.service" /etc/systemd/system/payment.service
 sed -i "s/DOMAIN_NAME/$domain_name/g" /etc/systemd/system/payment.service
-validate $? "adding vim files into shipping"
+validate $? "adding vim files into payment"
+
+echo "$(timestamp)[INFO] === checking in $SECONDS seconds"
 
 systemctl daemon-reload  &>> $logs_file
 systemctl enable payment  &>> $logs_file
