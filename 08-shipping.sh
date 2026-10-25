@@ -41,6 +41,66 @@ dnf module enable maven:3.9 -y  &>> $logs_file
 dnf install maven java-25-openjdk-devel -y  &>> $logs_file
 validate $? "install maven and java "
 
+alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java"
+validate $? "seting as default java version 24"
+
+echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
+source /etc/profile.d/java.sh
+echo $JAVA_HOME 
+
+validate $? "seting java maven version"
+
+if id roboshop &>/dev/null; then
+    echo -e "$(timestamp)[INFO] roboshop user already exists.....${Y}Skipping${N}"
+else
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "Creating roboshop user"
+fi
+
+rm -rf /app
+validate $? "removeing old application directory"
+
+mkdir -p /app
+validate $? "app directory"
+
+curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip &>> $logs_file
+validate $? "Download the shipping"
+
+cd /app
+unzip /tmp/shipping.zip &>> $logs_file
+validate $? "unzip the shipping file"
+
+mvn clean package &>> $logs_file
+validate $? "install dependencies"
+
+mv target/shipping.jar shipping.jar
+validate $? "maven shipping jar file"
+
+
+
+cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
+
+sed -i "s/DOMAIN_NAME/$domain_name/g" /etc/systemd/system/shipping.service
+validate $? "adding vim files into shipping"
+
+dnf install mysql -y
+validate $? "install my sql"
+
+mysql -h "mysql.DOMAIN_NAME" -uroot -pRoboShop@1 < /app/db/master-data.sql
+validate $? "Loading shipping data"
+
+
+systemctl daemon-reload  &>> $logs_file
+systemctl enable shipping  &>> $logs_file
+systemctl start shipping  &>> $logs_file
+
+validate $? "Load and start shipping service"
+
+
+systemctl restart shipping
+validate $? "restarting shipping"
+
+
 echo "$(timestamp)[INFO] === Scripted Completed in $SECONDS seconds"
 echo "$(timestamp)[INFO] === Scripted Completed and execution" | tee -a $logs_file
 

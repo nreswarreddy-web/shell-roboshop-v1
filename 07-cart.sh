@@ -46,8 +46,8 @@ validate $? "Installing the nodejs 24"
 if id roboshop &>/dev/null; then
     echo -e "$(timestamp)[INFO] roboshop cart already exists.....${Y}Skipping${N}"
 else
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system cart" roboshop
-    validate $? "Creating roboshop cart"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "Creating roboshop user"
 fi
 
 rm -rf /app
