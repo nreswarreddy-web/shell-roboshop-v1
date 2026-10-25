@@ -46,7 +46,7 @@ validate $? "Installing the nodejs 24"
 if [ $? -ne 0 ]; then
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-validate $? "Applicatoin is going to run non user "
+validate $? "Creating roboshop user"
 
 else 
 
@@ -95,18 +95,20 @@ validate $? "Installing mongosh"
 
 
 
-product_count=$(mongosh --host "mongodb.$domain_name" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()' 2>>)
+product_count=$(mongosh --host "mongodb.$domain_name" \
+  --quiet \
+  --eval 'db.getSiblingDB("catalogue").products.countDocuments()' \
+  2>>$logs_file)
 validate $? "Connecting mongoDB"
 
-if [ $product_count -eq 0 ]
+if [ "$product_count" -eq 0 ]; then
 
-mongosh --host "mongodb.$domain_name" </app/db/master-data.js &>> $logs_file
-validate $? "Loading the products"
+    mongosh --host "mongodb.$domain_name" < /app/db/master-data.js >> $logs_file
+    validate $? "Loading the products"
 
-else 
-  echo -e "$(timestamp) [INFO] products already loaded....${Y}Skipping{N}"
+else
+    echo -e "$(timestamp)[INFO] products already loaded....${Y}Skipping${N}"
 fi
-
 systemctl restart catalogue
 validate $? "restarting catalogure"
 
